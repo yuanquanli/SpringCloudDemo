@@ -1,6 +1,5 @@
 package com.me.orderservicedemo.controller;
 
-import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.me.orderservicedemo.model.entity.User;
 import com.me.orderservicedemo.service.feign.OrderFeignClient;
 import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
@@ -63,7 +62,7 @@ public class OrderController {
      * @param id
      * @return
      */
-    @SentinelResource(value = "findByIdByRest", blockHandler = "orderBlockHandler", fallback = "orderFallBack")
+//    @SentinelResource(value = "findByIdByRest", blockHandler = "orderBlockHandler", fallback = "orderFallBack")
     @GetMapping("/{id}")
     public ResponseEntity<Object> findByIdByRest(@PathVariable Integer id){
         if (id != 1){

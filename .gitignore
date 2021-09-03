@@ -1,0 +1,4 @@
+# Project exclude paths
+/ApiZuulServer/target/
+/EurekaServerDemo/target/
+/UserService/target/

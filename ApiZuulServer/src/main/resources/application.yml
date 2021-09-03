@@ -5,15 +5,36 @@ spring:
   application:
     name: api-zuul-server
 
+#配置Eureka
+eureka:
+  client:
+    service-url:
+      # server注册地址,多server注册, 使用逗号隔开
+      #      defaultZone: http://localhost:8000/eureka/, http://localhost:9000/eureka/
+      defaultZone: http://localhost:9000/eureka/
+  instance:
+    #是否使用IP地址来注册
+    prefer-ip-address: true
+    #向注册中心注册服务ID
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+
 ##路由配置
 zuul:
   routes:
-    #因为是K-V值, 所以先定义一个id, 再定义对应的path和url
+    #因为是K-V值, 所以先定义一个key, 再定义对应的zuul-route
     order-service:
       #localhost:9090/order-service/**
       path: /order-service/**
       #路径映射的微服务的实际地址
-      url: http://127.0.0.1:9001
-    user-service:
-      path: /user-service/**
-      url: http://127.0.0.1:9002
+#      url: http://127.0.0.1:9001
+      #路径映射的服务发现配置的服务ID
+      service-id: order-service
+      stripPrefix: false
+      #如果路由id 和 对应的微服务的serviceId一致的话
+#    order-service: /order-service/**
+#    user-service:
+#      path: /user-service/**
+#      url: http://127.0.0.1:9002
+#      serviceId: user-service
+#      stripPrefix: false
+    user-service: /user-service/**
