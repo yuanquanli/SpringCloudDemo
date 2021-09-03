@@ -1,0 +1,19 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: api-zuul-server
+
+##路由配置
+zuul:
+  routes:
+    #因为是K-V值, 所以先定义一个id, 再定义对应的path和url
+    order-service:
+      #localhost:9090/order-service/**
+      path: /order-service/**
+      #路径映射的微服务的实际地址
+      url: http://127.0.0.1:9001
+    user-service:
+      path: /user-service/**
+      url: http://127.0.0.1:9002

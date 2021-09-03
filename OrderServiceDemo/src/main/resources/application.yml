@@ -1,0 +1,57 @@
+server:
+  port: 9001
+
+spring:
+  application:
+    name: order-service
+
+  cloud:
+    sentinel:
+      transport:
+        port: 8719
+        dashboard: localhost:8080
+      #关闭sentinel的懒加载
+      eager: true
+
+#配置Eureka
+eureka:
+  client:
+    service-url:
+      # server注册地址,多server注册, 使用逗号隔开
+#      defaultZone: http://localhost:8000/eureka/, http://localhost:9000/eureka/
+      defaultZone: http://localhost:9000/eureka/
+
+  instance:
+    #是否使用IP地址来注册
+    prefer-ip-address: true
+    #向注册中心注册服务ID
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+
+#feign日志配置
+feign:
+  client:
+    config:
+      user-service:
+        loggerLevel: FULL
+  #高版本的feign配置Hystrix需要这样配置
+  circuitbreaker:
+    enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+#hystrix:
+#  command:
+#    default:
+#      execution:
+#        isolation:
+#          thread:
+#            #默认连接的超时时间为1s
+#            timeoutInMilliseconds: 2000
+
+#logging:
+#  level:
+#    com.me.orderservicedemo.service.feign.OrderFeignClient: debug
