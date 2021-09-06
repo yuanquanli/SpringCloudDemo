@@ -13,6 +13,7 @@
         <module>OrderServiceDemo</module>
         <module>UserService</module>
         <module>ApiZuulServer</module>
+        <module>ApiGateWayServer</module>
     </modules>
 
     <properties>
@@ -29,10 +30,6 @@
     </parent>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
