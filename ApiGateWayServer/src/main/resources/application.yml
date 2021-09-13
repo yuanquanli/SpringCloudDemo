@@ -1,0 +1,68 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: api-gateway-server
+
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+
+  cloud:
+    gateway:
+      #配置路由
+      routes:
+      #order-service路由配置
+      - id: order-service
+        #使用lb来指定以服务名来自动实现转发
+        uri: lb://order-service
+        #配置path等属性的谓语列表
+        predicates:
+          #- Path=/api/orders/**
+          - Path=/order-service/**
+        #配置路由过滤器
+        filters:
+#          #如果配置了sentinel过滤器, 则不需要自带的过滤器配置
+#          - name: RequestRateLimiter
+#            args:
+#              # 使用SpEL从容器中获取对象
+#              key-resolver: '#{@userKeyResolver}'
+#              # 令牌桶每秒填充平均速率
+#              redis-rate-limiter.replenishRate: 1
+#              # 令牌桶的上限
+#              redis-rate-limiter.burstCapacity: 3
+          #路径重写的过滤器, yml文件中$需要写成$\
+          - RewritePath=/order-service/(?<segment>.*), /$\{segment}
+
+      #user-service路由配置
+      - id: user-service
+        #使用lb来指定以服务名来自动实现转发
+        uri: lb://user-service
+        #配置path等属性的谓语列表
+        predicates:
+          - Path=/user-service/**
+        filters:
+          #路径重写的过滤器, yml文件中$需要写成$\
+          - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+
+#      #配置自动根据服务名进行路由转发, 这样就不需要id形式的配置
+#      discovery:
+#        locator:
+#          # 开启根据服务名自动转发
+#          enabled: true
+#          #微服务名以小写形式呈现
+#          lower-case-service-id: true
+#配置Eureka
+eureka:
+  client:
+    service-url:
+      # server注册地址,多server注册, 使用逗号隔开
+      #      defaultZone: http://localhost:8000/eureka/, http://localhost:9000/eureka/
+      defaultZone: http://localhost:9000/eureka/
+  instance:
+    #是否使用IP地址来注册
+    prefer-ip-address: true
+    #向注册中心注册服务ID
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
